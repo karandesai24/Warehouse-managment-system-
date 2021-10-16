@@ -1,0 +1,7 @@
+Supplier_id :          8520
+
+Product Quantity:    1342
+
+Product ID:            8975
+
+Shipping id:           5412

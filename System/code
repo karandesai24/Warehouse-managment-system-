@@ -1,0 +1,616 @@
+from tkinter import *
+import tkinter as tk
+import time
+import os
+from tkinter import messagebox
+
+
+def register():
+    global register_screen
+    register_screen = Toplevel(root)
+    register_screen.title("Register")
+    register_screen.geometry("300x250")
+
+    global userProduct_id
+    global password
+    global userProduct_id_entry
+    global password_entry
+    userProduct_id = StringVar()
+    password = StringVar()
+
+    Label(register_screen, text="Please enter details below").pack()
+    Label(register_screen, text="").pack()
+    userProduct_id_lable = Label(register_screen, text="User_id * ")
+    userProduct_id_lable.pack()
+    userProduct_id_entry = Entry(register_screen, textvariable=userProduct_id)
+    userProduct_id_entry.pack()
+    password_lable = Label(register_screen, text="Password * ")
+    password_lable.pack()
+    password_entry = Entry(register_screen, textvariable=password, show='*')
+    password_entry.pack()
+    Label(register_screen, text="").pack()
+    Button(register_screen, text="Register", width=10, height=1, bg="#bdf2fd",command=register_user).pack()
+
+def register_user():
+    userProduct_id_info = userProduct_id.get()
+    password_info = password.get()
+    file = open(userProduct_id_info, "w")
+    file.write(userProduct_id_info + "\n")
+    file.write(password_info)
+    file.close()
+    userProduct_id_entry.delete(0, END)
+    password_entry.delete(0, END)
+
+    Label(register_screen, text="Registration Success", fg="#9e3ed6", font=("calibri", 11)).pack()
+
+def login():
+    global userProduct_id_verify
+    global password_verify
+    global userProduct_id_login_entry
+    global password_login_entry
+    global root
+    root = Tk()
+    root.geometry("1280x720")
+    root.title("WAREHOUSE MANAGEMENT SYSTEM")
+    bg_image = tk.PhotoImage(file="emp.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=0)
+    userProduct_id_verify = StringVar()
+    password_verify = StringVar()
+    Tops=Frame(root, bg='white')
+    Tops.pack(side=TOP)
+    global localtime
+    # ------------------TIME--------------
+    localtime = time.asctime(time.localtime(time.time()))
+
+    f1 = Frame(root,bg="white")
+    f1.place(x=400, y=300)
+    lblinfo=Label(Tops,font=('aria',30,'bold'),text="WAREHOUSE MANAGEMENT SYSTEM",fg="Black",bd=10,anchor='w')
+    lblinfo.grid(row=0, column=0)
+    lblinfo = Label(Tops, font=('aria', 20,), text=localtime, fg="steel blue", anchor=W)
+    lblinfo.grid(row=1, column=0)
+
+    
+    
+    
+    
+    
+
+    lblProduct_id = Label(f1, font=('aria', 16, 'bold'), text="User_id:", fg="black", bd=20, anchor='center',bg="white")
+    lblProduct_id.grid(row=10, column=5)
+    userProduct_id_login_entry = Entry(f1, font=('ariel', 16, 'bold'), 
+    textvariable=userProduct_id_verify, bd=6, insertwidth=6, bg="#FFFFFF",justify='left')
+    userProduct_id_login_entry.grid(row=10, column=6)
+    lblpassword = Label(f1, font=('aria', 16, 'bold'), text="Password:", fg="black", bd=20, anchor='center',bg="white")
+    lblpassword.grid(row=11, column=5)
+    password_login_entry = Entry(f1, font=('ariel', 16, 'bold'), textvariable=password_verify, bd=6, insertwidth=6,bg="#FFFFFF",justify='left', show='*')
+    password_login_entry.grid(row=11, column=6)
+    btnregister = Button(f1, padx=8, pady=5, bd=5, fg="black", font=('calibri', 18, 'bold'), width=10, text="Register",bg="#bdf2fd", command=register)
+    btnregister.grid(row=18, column=5)
+    btnlogin = Button(f1, padx=8, pady=5, bd=5, fg="black", font=('calibri', 18, 'bold'), width=10, text="Login",bg="#bdf2fd", command=login_verify)
+    btnlogin.grid(row=18, column=6)
+    btnexit = Button(f1, padx=8, pady=5, bd=5, fg="black", font=('calibri', 18, 'bold'), width=10, text="Back",bg="#bdf2fd",command=b_back)
+    btnexit.grid(row=18, column=8)
+    root.mainloop()
+
+def login_verify():
+    global loggedin
+    userProduct_id1 = userProduct_id_verify.get()
+    password1 = password_verify.get()
+    userProduct_id_login_entry.delete(0, END)
+    password_login_entry.delete(0, END)
+    loggedin = StringVar()
+    loggedin = userProduct_id1
+    list_of_files = os.listdir()
+    if userProduct_id1 in list_of_files:
+        file1 = open(userProduct_id1, "r")
+        verify = file1.read().splitlines()
+        if password1 in verify:
+            employ_port()
+        else:
+            # Label(root, text="password not recognized", fg="red", font=("calibri", 11)).pack()
+            password_not_recognised()
+    else:
+        user_not_found()
+
+
+def employ_port():
+    root.destroy()
+    employee_portal_screen()
+
+def employe_portal():
+    rootwindow.destroy()
+    login()
+
+def manager_portal():
+    rootwindow.destroy()
+    manager_portal_screen()
+
+
+def password_not_recognised():
+    global password_not_recog_screen
+    password_not_recog_screen = Toplevel(root)
+    password_not_recog_screen.title("Success")
+    password_not_recog_screen.geometry("150x100")
+    Label(password_not_recog_screen, text="Invalid Password ").pack()
+    Button(password_not_recog_screen, text="OK", command=delete_password_not_recognised).pack()
+
+def user_not_found():
+    global user_not_found_screen
+    user_not_found_screen = Toplevel(root)
+    user_not_found_screen.title("Success")
+    user_not_found_screen.geometry("150x100")
+    Label(user_not_found_screen, text="User Not Found").pack()
+    Button(user_not_found_screen, text="OK", command=delete_user_not_found_screen).pack()
+
+
+
+
+
+def delete_password_not_recognised():
+    password_not_recog_screen.destroy()
+
+
+def delete_user_not_found_screen():
+    user_not_found_screen.destroy()
+
+
+
+def qexit():
+    empportal.destroy()
+    welcome_screen()
+
+def manager_back():
+    patportal.destroy()
+    welcome_screen()
+
+def employee_back():
+    empportal.destroy()
+    welcome_screen()
+
+def b_back():
+    root.destroy()
+    welcome_screen()
+
+
+def a_back():
+    patportal.destroy()
+    welcome_screen()
+
+def a_backk():
+    pa.destroy()
+    manager_portal_screen()
+
+def a_backkk():
+    paty.destroy()
+    manager_portal_screen()
+
+def data_view():
+    patportal.destroy()
+    monthlyreport()
+
+
+def monthlyreport():
+
+    global paty
+    paty = tk.Tk()
+    enter_id = StringVar()
+    paty.geometry("1280x720")
+    paty.title("WAREHOUSE MANAGEMENT SYSTEM")
+    paty.configure(background='white')
+    fr1 = tk.Frame(paty)
+    fr1.pack(side="top")
+    bg_image = tk.PhotoImage(file="mrpage.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=200)
+    
+
+    img6 = tk.PhotoImage(file="back.gif")
+    myimg6 = img6.subsample(2, 2)
+    b6 = tk.Button(image=myimg6,command=a_backkk)
+    b6.image = myimg6
+    b6.place(x=1120, y=600)
+    
+
+    paty.mainloop()
+
+
+ 
+def emp():
+    patportal.destroy()
+    emp1()
+ 
+def emp1():
+
+    global pa
+    pa = Tk()
+    pa.geometry("1280x720")
+    pa.title("WAREHOUSE MANAGEMENT SYSTEM")
+    pa.configure(background='coral')
+    fr1 = tk.Frame(pa)
+    fr1.pack(side="top")
+    bg = tk.PhotoImage(file="emp.png")
+    n=tk.Label(image=bg)
+    n.place(y=0,x=0)
+    f = open("emp.txt", "r")
+    x = 50
+    y = 200
+    for line in f:
+        l = tk.Message(pa, anchor="w", fg="black", font=('ariel', 8, 'bold'),justify="right", text=line, relief="raised", width=3000)
+        l.place(x=x + 100, y=y +20 )
+        # x +=100
+        y += 30
+    f.close()
+    img6 = tk.PhotoImage(file="back.gif")
+    myimg6 = img6.subsample(2, 2)
+
+    b6 = tk.Button(image=myimg6, command=a_backk)
+    b6.image = myimg6
+    b6.place(x=1120, y=600)
+ 
+    pa.mainloop()
+  
+
+
+def scan():
+    def record():
+        cap = cv2.VideoCapture(0)
+
+        while (True):
+            
+            ret, frame = cap.read()
+
+            
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+           
+            cv2.imshow('Camera 1', gray)
+            if cv2.waitKey(1) & 0xFF == ord('X'):
+                break
+
+       
+        cap.release()
+        cv2.destroyAllWindows()
+
+    cam = Tk()
+    cam.geometry("250x250")
+    cam.title("Barcode Scanner")
+    b1 = tk.Button(cam , text="Scan" ,command=record)
+    b1.place(x=100,y=100)
+    l1=tk.Label(cam, text="Press X to stop camera" , fg="red")
+    l1.place(x=60,y=60)
+    b2 = tk.Button(cam, text="Exit", command=cam.destroy)
+    b2.place(x=100, y=140)
+
+    cam.mainloop()
+
+
+
+def chk():
+    global updata
+    updata = Tk()
+    updata.geometry("1280x720")
+    updata.title("Upload Data")
+    updata.configure(background='white')
+    fr1 = tk.Frame(updata)
+    fr1.pack(side="top")
+
+    bg_image = tk.PhotoImage(file="uploaddetails.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=0)
+    frec = open("stock.txt", "r")
+    x = -45
+    y = 150
+    for line in frec:
+        l = tk.Message(updata,anchor="w", justify="right", text=line, relief="raised",width=2000)
+        l.place(x=x + 100, y=y + 100, )
+       
+        y += 40
+    frec.close()
+    up = tk.PhotoImage(file="uploaddetails.png")
+    upl = up.subsample(2, 2)
+    b7 = tk.Button(image=upl, command=detail_portal)
+    b7.image = upl
+    b7.place(x=950, y=550)
+
+    img6 = tk.PhotoImage(file="back.gif")
+    myimg6 = img6.subsample(2, 2)
+    b6 = tk.Button(image=myimg6, command=employee_portal_screen_back)
+    b6.image = myimg6
+    b6.place(x=980, y=600)
+
+    updata.mainloop()
+
+def employee_portal_screen_back():
+    updata.destroy()
+    employee_portal_screen()
+ 
+def detail_portal():
+    updata.destroy()
+    main_save_detail()
+
+def main_save_detail():
+    def save_report_to_file():
+        id = e_id.get()
+        prid = Product_id.get()
+        supid = supplier_id.get()
+        shipid = Shipping_id.get()
+        filprid = open("{}.txt".format(id), "w")
+        filprid.write("Supplier_id : {}".format(id))
+        filprid.write("\nProduct Quantity : " + prid)
+        filprid.write("\nproduct ID: " + supid)
+        filprid.write("\nshipping id : " + shipid)
+        filprid.close()
+        messagebox.showinfo("Details Uploaded")
+
+def employee_back():
+    empportal.destroy()
+    welcome_screen()
+    
+
+
+
+def product_data_view_open():
+    empportal.destroy()
+    main_product_data_view()
+
+def main_product_data_view():
+    global productscreen
+    productscreen= Tk()
+    enter_id = StringVar()
+    productscreen.geometry("1280x720")
+    productscreen.title("Product Details")
+    productscreen.configure(background='steelblue')
+    fr1 = tk.Frame(productscreen)
+    fr1.pack(side="top")
+    bg_image = tk.PhotoImage(file="prd.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=0)
+    f = open("stock.txt", "r")
+    x = 50
+    y = 200
+    for line in f:
+        l = tk.Message(productscreen, anchor="w", fg="black", font=('ariel', 8, 'bold'),justify="right", text=line, relief="raised", width=3000)
+        l.place(x=x + 100, y=y +20 )
+        
+        y += 30
+    f.close()
+
+    img6 = tk.PhotoImage(file="back.gif")
+    myimg6 = img6.subsample(2, 2)
+    b6 = tk.Button(image=myimg6, command=product_data_view_back)
+    b6.image = myimg6
+    b6.place(x=1120, y=600)
+
+    productscreen.mainloop()
+
+def product_data_view_back():
+    productscreen.destroy()
+    employee_portal_screen()
+
+def upload_data():
+    empportal.destroy()
+    #chk()
+    def clear():
+        productreportg.destroy()
+        productgenratereport()
+    def ok():
+        showw.destroy()
+        productgenratereport()
+    def prnum():
+        global counter
+        counter = str
+        filprid3= open("id.txt" ,"r")
+        counter =int(filprid3.read())
+        counter +=1
+        filprid3.close()
+        f1 = open("id.txt", 'w')
+        f1.write(str(counter))
+        f1.close()
+
+    def sh():
+        productreportg.destroy()
+        prnum()
+        productprint()
+        global showw
+        showw = Tk()
+        showw.geometry("1280x720")
+        showw.title("WAREHOUSE MANAGEMENT SYSTEM")
+        showw.configure(background='brown1')
+        fr1 = tk.Frame(showw)
+        fr1.pack(side="top")
+        bg_image = tk.PhotoImage(file="UPLOAD DATA.png")
+        x = tk.Label(image=bg_image)
+        x.place(y=0, x=0)
+        nam = tk.Label(showw, font=('aria', 16, 'bold'), text="product_id: "+na, fg="brown", bd=6, anchor='w')
+        nam.place(x=170, y=100)
+        supplier_ide = tk.Label(showw, font=('aria', 16, 'bold'), text="supplier_id : "+ag, fg="brown", bd=6, anchor='w')
+        supplier_ide.place(x=170, y=140)
+        gend = tk.Label(showw, font=('aria', 16, 'bold'), text="shipping_id: "+mal, fg="brown", bd=6, anchor='w')
+        gend.place(x=170, y=180)
+        tes =tk.Label(showw,font=('aria', 16, 'bold'), text="quantity: "+q, fg="brown", bd=6, anchor='w')
+        tes.place(x=170, y=220)
+ 
+        oky = tk.Button(showw, padx=8, pady=4, bd=6, fg="black", font=('ariel', 10, 'bold'), width=10, text="OK",bg="red", command=ok )
+        oky.place(x=1000, y=620)
+        showw.mainloop()
+
+    def productprint():
+        localtime = time.asctime(time.localtime(time.time()))
+        global na,ag,mal,q
+        na = Product_id.get()
+        ag = supplier_id.get()
+        mal = Shipping_id.get()
+        q = quantity.get()
+        record =open("producttest", "a+")
+        record.write(" Product_id Supplier_id Shipping_id Quantity \n")
+        record.write(na+" " +ag+" "+mal+" "+q+" ")
+        record.write("\n---------------------------------------------------------------------------")
+        record.write("\n\n")
+        record.close()
+
+    def productgenratereport():
+        global Shipping_id,e1,e2,e3
+        global Product_id
+        global supplier_id
+        global productreportg
+        global quantity
+ 
+        productreportg = Tk()
+        supplier_id = StringVar()
+        Product_id = StringVar()
+        Shipping_id = StringVar()
+        quantity=StringVar()
+        
+        productreportg.geometry("1280x720")
+        productreportg.title("WAREHOUSE MANAGEMENT SYSTEM")
+        productreportg.configure(background='brown1')
+        fr1 = tk.Frame(productreportg)
+        fr1.pack(side="top")
+        bg_image = tk.PhotoImage(file="UPLOAD DATA.png")
+        x = tk.Label(image=bg_image)
+        x.place(y=0, x=0)
+        l1 = tk.Label(productreportg, font=('aria', 16, 'bold'), text="product_id ", fg="brown", bd=6, anchor='w')
+        l1.place(x=350, y=250)
+        e1 = tk.Entry(productreportg,font=('ariel', 16, 'bold') , bd=6, textvariable=Product_id , insertwidth=6, bg="#9e3ed6", justify='left')
+        e1.place(x=500, y=250)
+        l2 = tk.Label(productreportg, font=('aria', 16, 'bold'), text="supplier_id ", fg="brown", bd=6, anchor='w')
+        l2.place(x=350, y=310)
+        e2 = tk.Entry(productreportg,font=('ariel', 16, 'bold') , bd=6, textvariable=supplier_id , insertwidth=6, bg="#9e3ed6", justify='left')
+        e2.place(x=500, y=310)
+        l3 = tk.Label(productreportg, font=('aria', 16, 'bold'), text="shipping_id", fg="brown", bd=6, anchor='w')
+        l3.place(x=350, y=370)
+        l4 = tk.Label(productreportg, font=('aria', 16, 'bold'), text="quantity", fg="brown", bd=6, anchor='w')
+        l4.place(x=350, y=430)
+        e3 = tk.Entry(productreportg,font=('ariel', 16, 'bold') , bd=6, textvariable=quantity , insertwidth=6, bg="#9e3ed6", justify='left')
+        e3.place(x=500, y=370)
+        e6 = tk.Entry(productreportg,font=('ariel', 16, 'bold') , bd=6, textvariable=Shipping_id , insertwidth=6, bg="#9e3ed6", justify='left')
+        e6.place(x=500, y=430)
+        e4=tk.Button(productreportg, padx=16, pady=8, bd=10, fg="black", font=('ariel', 16, 'bold'), width=10, text="Submit",bg="red" ,command= sh)
+        e4.place(x=400, y=550)
+        e5=tk.Button(productreportg, padx=16, pady=8, bd=10, fg="black", font=('ariel', 16, 'bold'), width=10, text="Clear All",bg="red", command=clear)
+        e5.place(x=600, y=550)
+        tkvar = StringVar()
+        img6 = tk.PhotoImage(file="back.gif")
+        myimg6 = img6.subsample(2, 2)
+        b6 = tk.Button(image=myimg6, command=pro_data_view_back)
+        b6.image = myimg6
+        b6.place(x=1120, y=600)
+        productreportg.mainloop()
+    productgenratereport()
+
+
+def pro_data_view_back():
+    productreportg.destroy()
+    employee_portal_screen()
+
+def manager_portal_screen():
+    global patportal
+    patportal = tk.Tk()
+    patportal.geometry("1280x720")
+    patportal.title("WAREHOUSE MANAGEMENT SYSTEM SYSTEM")
+    patportal.configure(background='deepskyblue')
+    fr1 = tk.Frame(patportal)
+    fr1.pack(side="top")
+    Tops=Frame(patportal, bg='white')
+    Tops.pack(side=TOP)
+    lblinfo=Label(Tops,font=('aria',30,'bold'),text="MANAGER PORTAL",fg="Black",bd=10,anchor='w')
+    lblinfo.grid(row=3, column=0)
+
+    imgc1 = tk.PhotoImage(file="monthlyreport.png")
+    imglo = tk.PhotoImage(file="employeedetails.png")
+    imgc = imgc1.subsample(1,1)
+    imglog = imglo.subsample(1,1)
+    
+    b1 = tk.Button(image=imgc,command=data_view)
+    b1.image= imgc
+    b2 = tk.Button(image=imglog , command=emp)
+    b2.image = imglog
+    img6 = tk.PhotoImage(file="back.gif")
+    myimg6 = img6.subsample(2, 2)
+
+    b6 = tk.Button(image=myimg6, command=a_back)
+    b6.image = myimg6
+    b1.place(x=250, y=300)
+    b2.place(x=250, y=500)
+    b6.place(x=1120, y=600)
+    patportal.mainloop()
+
+
+def employee_portal_screen():
+    
+    global empportal
+    empportal = tk.Tk()
+    empportal.geometry("1280x720")
+    empportal.title("WAREHOUSE MANAGEMENT SYSTEM")
+    empportal.configure(background='coral')
+    fr1 = tk.Frame(empportal)
+    fr1.pack(side="top")
+    bg_image= tk.PhotoImage(file="emp.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=0)
+    l1 = tk.Label(empportal, font=('calibri', 16, 'bold'), text="Logged in as: "+loggedin, fg="black", bd=6, anchor='w')
+    l1.place(x=1050, y=90)
+    
+    Tops=Frame(empportal, bg='white')
+    Tops.pack(side=TOP)
+    lblinfo=Label(Tops,font=('aria',30,'bold'),text="EMPLOYEE PORTAL",fg="Black",bd=10,anchor='w')
+    lblinfo.grid(row=3, column=0)
+    imglo = tk.PhotoImage(file="SCAN.gif")
+    imgc2 = tk.PhotoImage(file="uploaddetails.png")
+    imgc3 = tk.PhotoImage(file="productdetails.png")
+   
+    imglog = imglo.subsample(1, 1)
+    img2 = imgc2.subsample(1, 1)
+    imgcl3 = imgc3.subsample(1, 1)
+    
+    b2 = tk.Button(image=imglog, command=scan)
+    b2.image = imglog
+    b3 = tk.Button(image=img2, command=upload_data)
+    b3.image = img2
+    b4 = tk.Button(image=imgcl3, command=product_data_view_open)
+    b4.image = imgcl3
+    img6 = tk.PhotoImage(file="logout.gif")
+    myimg6 = img6.subsample(2, 2)
+
+    b6 = tk.Button(image=myimg6, command=qexit)
+    b6.image = myimg6
+    
+    b2.place(x=830, y=400)
+    b3.place(x=170, y=400)
+    b4.place(x=500, y=400)
+    b6.place(x=1070, y=150)
+    empportal.mainloop()
+
+def welcome_screen():
+    global rootwindow
+    rootwindow = tk.Tk()
+    rootwindow.geometry("1280x720")
+    rootwindow.title("WAREHOUSE MANAGEMENT SYSTEM")
+    rootwindow.configure(background='orange')
+    fr1 = tk.Frame(rootwindow)
+    fr1.pack(side="top")
+    bg_image = tk.PhotoImage(file="background.png")
+    x = tk.Label(image=bg_image)
+    x.place(y=0, x=0)
+    imgc1 = tk.PhotoImage(file="manager portal.png")
+    imglo = tk.PhotoImage(file="employee portal.png")
+    imgc = imgc1.subsample(1, 1)
+    imglog = imglo.subsample(2, 2)
+    b1 = tk.Button(image=imgc,command=manager_portal)
+    b1.image = imgc
+    b2 = tk.Button(image=imglog, command=employe_portal)
+    b2.image = imglog
+    img6 = tk.PhotoImage(file="exit.gif")
+    myimg6 = img6.subsample(3,3)
+    b6 = tk.Button(image=myimg6, command=rootwindow.destroy)
+    b6.image = myimg6
+    b1.place(x=300, y=350)
+    b2.place(x=700, y=350)
+    b6.place(x=1020, y=100)
+    rootwindow.mainloop()
+
+def wms_screen():
+    welcome_screen()
+
+wms_screen()
